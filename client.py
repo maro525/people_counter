@@ -17,6 +17,7 @@ if __name__ == "__main__":
                     help="OSC PORT")
     ap.add_argument("-a", "--address", default="/people",
                     help="OSC ADDRESS")
+    ap.add_argument("--id", type=int, default=ID, help="camera id")
     args = vars(ap.parse_args())
 
     pc = PeopleCounter(args["skip_frames"], args["confidence"])
@@ -24,7 +25,7 @@ if __name__ == "__main__":
     pc.load_video()
     while True:
         bRun = pc.run()
-        send_list = [ID, pc.people_num]
+        send_list = [args["id"], pc.people_num]
         oc.send(send_list)
         if not bRun:
             break
