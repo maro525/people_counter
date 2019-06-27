@@ -1,0 +1,5 @@
+.vscode/
+videos/
+*.caffemodel
+*.prototxt
+__pycache__/
