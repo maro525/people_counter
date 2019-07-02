@@ -13,10 +13,11 @@ CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
 
 class PeopleCounter:
 
-    def __init__(self, skip, confidence):
+    def __init__(self, cam_num, skip, confidence):
         print("[INFO] loading model...")
         self.net = cv2.dnn.readNetFromCaffe(
             "./mobilenet_ssd/MobileNetSSD_deploy.prototxt", "./mobilenet_ssd/MobileNetSSD_deploy.caffemodel")
+        self.cam_num = cam_num
         self.skip_frames = skip
         self.confidence = confidence
         self.people_num = 0
@@ -24,7 +25,7 @@ class PeopleCounter:
     def load_video(self):
 
         print("[INFO] starting video stream...")
-        self.vs = VideoStream(src=0).start()
+        self.vs = VideoStream(src=self.cam_num).start()
         time.sleep(2.0)
 
         self.video_W = None
@@ -74,7 +75,7 @@ class PeopleCounter:
         cv2.imshow("Frame", frame)
         key = cv2.waitKey(1) & 0xFF
 
-        print(self.people_num)
+        print("CAM:", self.cam_num, "PEOPLE", self.people_num)
 
         if key == ord("q"):
             return False

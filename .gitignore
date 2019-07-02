@@ -3,3 +3,4 @@ videos/
 *.caffemodel
 *.prototxt
 __pycache__/
+test/
