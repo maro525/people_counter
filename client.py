@@ -2,26 +2,36 @@
 import argparse
 from people_counter import PeopleCounter
 from osc_client import Osc_Client
+from cameraname import get_camera_name
 
-camera_ids = [0, 1, 2]
 pcs = []  # array of people counter class
+
+
+def set_camera_name():
+    return get_camera_name('USB')
 
 
 def main(skip_frame, confidence, osc_ip, osc_port, osc_address):
     for i in range(3):
-        pc = PeopleCounter(camera_ids[0], skip_frame, confidence)
+        pc = PeopleCounter(skip_frame, confidence)
         pcs.append(pc)
 
     oc = Osc_Client(osc_ip, osc_port, osc_address)
 
-    for pc in pcs:
-        pc.load_video()
+    cam_indexes = get_camera_name('USB')
+    if len(cam_indexes) is 0:
+        print("[CAM GET ERROR] no usb camera")
+        return
+
+    for i, pc in enumerate(pcs):
+        pc.load_video(cam_indexes[i])
 
     while True:
         bRun = True
-        for pc in pcs:
+        for i, pc in enumerate(pcs):
             bCamera_running = pc.run()
-            if not bCamera_running:
+            if bCamera_running is False:
+                print("camera", i, "not running")
                 bRun = False
                 break
 

@@ -13,39 +13,41 @@ CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
 
 class PeopleCounter:
 
-    def __init__(self, cam_num, skip, confidence):
+    def __init__(self, skip, confidence):
         print("[INFO] loading model...")
         self.net = cv2.dnn.readNetFromCaffe(
             "./mobilenet_ssd/MobileNetSSD_deploy.prototxt", "./mobilenet_ssd/MobileNetSSD_deploy.caffemodel")
-        self.cam_num = cam_num
         self.skip_frames = skip
         self.confidence = confidence
         self.people_num = 0
 
-    def load_video(self):
-
+    def load_video(self, cam_num):
+        self.cam_num = cam_num
         print("[INFO] starting video stream...")
-        self.vs = VideoStream(src=self.cam_num).start()
+        # self.vs = VideoStream(src=self.cam_num).start()
+        self.vs = cv2.VideoCapture(self.cam_num)
+        self.vs.set(3, 160)
+        self.vs.set(4, 120)
         time.sleep(2.0)
 
-        self.video_W = None
-        self.video_H = None
+        self.video_W = 160
+        self.video_H = 120
         self.totalFrames = 0
         self.fps = FPS().start()
 
     def run(self):
-        frame = self.vs.read()
+        flag, frame = self.vs.read()
         self.people_num = 0
         # frame = frame[1]
 
         if frame is None:
             return False
 
-        frame = imutils.resize(frame, width=500)
+        # frame = imutils.resize(frame, width=500)
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        if self.video_W is None or self.video_H is None:
-            (self.video_H, self.video_W) = frame.shape[:2]
+        # if self.video_W is None or self.video_H is None:
+            # (self.video_H, self.video_W) = frame.shape[:2]
 
         if self.totalFrames % self.skip_frames == 0:
             status = "Detecting"
@@ -72,7 +74,7 @@ class PeopleCounter:
                         frame, (cx, cy), 4, (0, 255, 0), -1)
                     self.people_num += 1
 
-        cv2.imshow("Frame", frame)
+        cv2.imshow("Frame"+str(self.cam_num), frame)
         key = cv2.waitKey(1) & 0xFF
 
         print("CAM:", self.cam_num, "PEOPLE", self.people_num)
