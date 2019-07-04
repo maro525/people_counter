@@ -20,6 +20,10 @@ class PeopleCounter:
         self.skip_frames = skip
         self.confidence = confidence
         self.people_num = 0
+        gamma = 1.5
+        self.gamma_cvt = np.zeros((256, 1), dtype='uint8')
+        for i in range(256):
+            self.gamma_cvt[i][0] = 255 * (float(i)/255) ** (1.0/gamma)
 
     def load_video(self, cam_num):
         self.cam_num = cam_num
@@ -35,6 +39,10 @@ class PeopleCounter:
         self.totalFrames = 0
         self.fps = FPS().start()
 
+    def gamma(self, frame):
+        img_gamma = cv2.LUT(frame, self.gamma_cvt)
+        return img_gamma
+
     def run(self):
         flag, frame = self.vs.read()
         self.people_num = 0
@@ -44,10 +52,10 @@ class PeopleCounter:
             return False
 
         # frame = imutils.resize(frame, width=500)
-        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         # if self.video_W is None or self.video_H is None:
-            # (self.video_H, self.video_W) = frame.shape[:2]
+        # (self.video_H, self.video_W) = frame.shape[:2]
 
         if self.totalFrames % self.skip_frames == 0:
             status = "Detecting"

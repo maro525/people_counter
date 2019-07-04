@@ -12,7 +12,7 @@ def set_camera_name():
 
 
 def main(skip_frame, confidence, osc_ip, osc_port, osc_address):
-    for i in range(3):
+    for i in range(1):
         pc = PeopleCounter(skip_frame, confidence)
         pcs.append(pc)
 

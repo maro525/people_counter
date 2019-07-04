@@ -9,18 +9,20 @@ def get_camera_name(camera_name):
     camera_list = list(filter(lambda a: a != "", ret.split('\n')))
     # print(camera_list)
 
-    camera_list = []
+    cameras = []
 
     for index, row in enumerate(camera_list):
-        if row is "FaceTime HD Camera":
-            continue
-        camera_list.append(index)
-        print(index, row)
+        if "Face" in row:
+            print("this is not web camera")
+            cameras.append(index)
+        else:
+            cameras.append(index)
+            print(index, row)
         # if row.find(camera_name) != -1:
         #   return index
 
     # raise Exception('no camera')
-    return camera_list
+    return cameras
 
 
 get_camera_name('USB')
