@@ -14,7 +14,6 @@ def get_camera_name(camera_name):
     for index, row in enumerate(camera_list):
         if "Face" in row:
             print("this is not web camera")
-            cameras.append(index)
         else:
             cameras.append(index)
             print(index, row)

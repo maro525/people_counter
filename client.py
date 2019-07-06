@@ -12,7 +12,7 @@ def set_camera_name():
 
 
 def main(skip_frame, confidence, osc_ip, osc_port, osc_address):
-    for i in range(1):
+    for i in range(3):
         pc = PeopleCounter(skip_frame, confidence)
         pcs.append(pc)
 
@@ -27,17 +27,11 @@ def main(skip_frame, confidence, osc_ip, osc_port, osc_address):
         pc.load_video(cam_indexes[i])
 
     while True:
-        bRun = True
         for i, pc in enumerate(pcs):
             bCamera_running = pc.run()
             if bCamera_running is False:
                 print("camera", i, "not running")
-                bRun = False
-                break
-
-        # if camera not working, break
-        if not bRun:
-            break
+                pcs.remove(pc)
 
         # send osc
         for pc in pcs:

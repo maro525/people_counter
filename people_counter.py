@@ -45,6 +45,8 @@ class PeopleCounter:
 
     def run(self):
         flag, frame = self.vs.read()
+        if not flag:
+            return False
         self.people_num = 0
         # frame = frame[1]
 
